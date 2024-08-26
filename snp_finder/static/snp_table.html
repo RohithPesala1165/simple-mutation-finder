@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNP Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        #pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .page-button {
+            margin: 0 5px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .page-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>SNP Details Table</h1>
+
+    <table id="snpTable">
+        <thead>
+            <tr>
+                <th>Chromosome</th>
+                <th>Position</th>
+                <th>Reference</th>
+                <th>Variant</th>
+                <th>Quality</th>
+                <th>Filter</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- SNP data rows will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+    <div id="pagination-controls">
+        <button id="prevPage" class="page-button" onclick="changePage(-1)">Previous</button>
+        <button id="nextPage" class="page-button" onclick="changePage(1)">Next</button>
+    </div>
+
+    <script>
+        let snps = [];
+        let currentPage = 1;
+        const entriesPerPage = 10;
+
+        async function fetchSnpData() {
+            const response = await fetch('/get_snps');
+            snpData = await response.json();
+            snps = snpData; // Store the fetched SNP data
+            displaySnpTable();
+        }
+
+        function displaySnpTable() {
+            const tableBody = document.querySelector("#snpTable tbody");
+            tableBody.innerHTML = ""; // Clear existing table data
+
+            const startIndex = (currentPage - 1) * entriesPerPage;
+            const endIndex = Math.min(startIndex + entriesPerPage, snps.length);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const snp = snps[i];
+                const row = `
+                    <tr>
+                        <td>${snp.chromosome}</td>
+                        <td>${snp.position}</td>
+                        <td>${snp.reference}</td>
+                        <td>${snp.variant}</td>
+                        <td>${snp.quality}</td>
+                        <td>${snp.filter}</td>
+                        <td>${snp.info}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            }
+
+            document.getElementById("prevPage").disabled = currentPage === 1;
+            document.getElementById("nextPage").disabled = endIndex >= snps.length;
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            displaySnpTable();
+        }
+
+        // Fetch SNP data when the page loads
+        fetchSnpData();
+    </script>
+</body>
+</html>
