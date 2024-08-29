@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNP Visualization</title>
+    <link rel="stylesheet" href="static/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+</head>
+<body>
+    <h1>SNP Visualization</h1>
+    <!-- File input form -->
+    <form id="file-path-form">
+        <label for="bamFilePath">BAM File Path:</label><br>
+        <input type="text" id="bamFilePath" name="bamFilePath"><br>
+        <label for="referenceGenomePath">Reference Genome Path:</label><br>
+        <input type="text" id="referenceGenomePath" name="referenceGenomePath"><br><br>
+        <input type="button" class="button" value="Run Variant Caller" onclick="runVariantCaller()"><br>
+    </form>
+
+    <div class="top-right-buttons">
+        <button class="button" onclick="window.location.href='snp_table.html'">View SNP Details in Table</button>
+        <div class="dropdown">
+            <button class="button">Export Data</button>
+            <div class="dropdown-content">
+                <a href="#" onclick="exportData('csv')">Export as CSV</a>
+                <a href="#" onclick="exportData('json')">Export as JSON</a>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div id="zoom-controls" style="margin-bottom: 10px;">
+        <label for="zoom-slider" style="font-weight: bold;">Zoom:</label>
+        <input type="range" id="zoom-slider" min="1" max="60" step="0.1" value="1">
+    </div>
+
+    <div id="legend-container" class="legend">
+        <div style="display: flex; align-items: center;">
+            <div class="color-box" style="background-color: green; width: 20px; height: 20px; margin-right: 5px;"></div>
+            <span>High Quality (Quality > 200)</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div class="color-box" style="background-color: orange; width: 20px; height: 20px; margin-right: 5px;">
+            </div>
+            <span>Low Quality (Quality < 50)</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div class="color-box" style="background-color: red; width: 20px; height: 20px; margin-right: 5px;"></div>
+            <span>Default</span>
+        </div>
+    </div>
+    
+    <div id="chromosome-container"></div>
+    <div id="snp-details" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
+        <h2>SNP Details</h2>
+        <p>Click on a SNP to see more details here.</p>
+    </div>
+    <script src="static/main.js"></script>
+</body>
+</html>

@@ -1,9 +1,8 @@
+from flask import Flask, request, jsonify, render_template
 import subprocess
-from flask import Flask, request, jsonify, send_from_directory
 import gzip
-#from flask_cors import CORS  
-app = Flask(__name__, static_folder='static')
-# CORS(app) 
+
+app = Flask(__name__)
 
 # Function to run the variant caller (bcftools)
 def run_variant_caller(bam_file, reference_genome):
@@ -32,13 +31,12 @@ def parse_vcf(vcf_file):
 # Home route to serve the index.html file
 @app.route('/')
 def serve_index():
-    print(f"{app.static_folder} Folder")
-    return send_from_directory(app.static_folder, 'index.html')
+    return render_template('index.html')
 
 # Route to serve the SNP table page
 @app.route('/snp_table.html')
 def serve_snp_table():
-    return send_from_directory(app.static_folder, 'snp_table.html')
+    return render_template('snp_table.html')
 
 # Route to run the variant caller and generate the VCF file
 @app.route('/run_variant_caller', methods=['POST'])
