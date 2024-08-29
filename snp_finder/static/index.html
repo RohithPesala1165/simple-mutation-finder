@@ -4,102 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SNP Visualization</title>
+    <link rel="stylesheet" href="static/style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        
-        #chromosome-container {
-            width: 100%;
-            height: 300px;
-            background-color: #eee;
-            border: 1px solid #ccc;
-            margin-top: 50px;
-            overflow: hidden;
-        }
-
-        /* Default style for each SNP line */
-        .snp-line {
-            fill: red;
-        }
-
-        /* Additional classes for styling based on SNP type */
-        .snp-high-quality {
-            fill: green;
-        }
-
-        .snp-low-quality {
-            fill: orange;
-        }
-
-        .snp-failed-filter {
-            fill: gray;
-        }
-
-        /* Positioning the buttons at the top right corner */
-        .top-right-buttons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            display: flex;
-            gap: 10px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-size: 16px;
-        }
-
-        input[type="text"] {
-            width: 98%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        /* Button styles */
-        .button {
-            padding: 10px 15px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 3px;
-        }
-
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #f1f1f1;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-    </style>    
+    
 </head>
 <body>
-      <h1>SNP Visualization</h1>
+    <h1>SNP Visualization</h1>
     <!-- File input form -->
     <form id="file-path-form">
         <label for="bamFilePath">BAM File Path:</label><br>
@@ -121,9 +31,26 @@
     </div>
     <br>
     <div id="zoom-controls" style="margin-bottom: 10px;">
-       <label for="zoom-slider" style="font-weight: bold;">Zoom:</label>
+        <label for="zoom-slider" style="font-weight: bold;">Zoom:</label>
         <input type="range" id="zoom-slider" min="1" max="60" step="0.1" value="1">
     </div>
+
+    <div id="legend-container" class="legend">
+        <div style="display: flex; align-items: center;">
+            <div class="color-box" style="background-color: green; width: 20px; height: 20px; margin-right: 5px;"></div>
+            <span>High Quality (Quality > 200)</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div class="color-box" style="background-color: orange; width: 20px; height: 20px; margin-right: 5px;">
+            </div>
+            <span>Low Quality (Quality < 50)</span>
+        </div>
+        <div style="display: flex; align-items: center;">
+            <div class="color-box" style="background-color: red; width: 20px; height: 20px; margin-right: 5px;"></div>
+            <span>Default</span>
+        </div>
+    </div>
+    
     <div id="chromosome-container"></div>
     <div id="snp-details" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #f9f9f9;">
         <h2>SNP Details</h2>
@@ -206,14 +133,14 @@
             const zoom = d3.zoom()
                 .scaleExtent([1, 10])
                 .translateExtent([[0, 0], [width, height]])
-                .on("zoom", function(event) {
+                .on("zoom", function (event) {
                     g.attr("transform", event.transform);
                 });
 
             svg.call(zoom);
 
             // Zoom slider control
-            d3.select("#zoom-slider").on("input", function(event) {
+            d3.select("#zoom-slider").on("input", function (event) {
                 const zoomLevel = event.target.value;
                 svg.transition().duration(100).call(zoom.scaleTo, zoomLevel);
             });
@@ -261,6 +188,6 @@
             const csvRows = snps.map(snp => headers.map(header => snp[header]).join(","));
             return headers.join(",") + "\n" + csvRows.join("\n");
         }
-    </script>      
+    </script>
 </body>
 </html>
