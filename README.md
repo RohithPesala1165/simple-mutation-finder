@@ -53,3 +53,5 @@ For the frontend, I created a simple interface using HTML, CSS, and vanilla Java
 - **View SNP Data in Table:** Click the "View SNP Details in Table" button to see the SNP data in a tabular format.
 - **Export SNP Data:** Click the "Export" button to download the SNP data as CSV or JSON.
 
+# Result
+![alt text](<Screenshot 2024-08-29 at 1.31.09 AM.png>)
